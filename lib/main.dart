@@ -18,13 +18,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Satoshi',
         primarySwatch: Colors.blue,
-        primaryColor: Colors.redAccent,
+        primaryColor: Colors.blueAccent,
         textTheme: const TextTheme(
           headline1: TextStyle(
             fontFamily: 'Telma',
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.redAccent,
+            color: Colors.blueAccent,
           ),
         ),
       ),

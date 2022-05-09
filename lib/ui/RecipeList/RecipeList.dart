@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_recipe/ui/RecipeDetails/RecipeDetail.dart';
 import 'package:flutter_recipe/ui/RecipeList/recipe_list_bloc.dart';
 
 import '../../models/Recipe.dart';
 
 class RecipeList extends StatefulWidget {
   String queryString;
+
   RecipeList({Key? key, required this.queryString}) : super(key: key);
 
   @override
@@ -15,6 +17,7 @@ class RecipeList extends StatefulWidget {
 
 class _RecipeList extends State<RecipeList> {
   late RecipeListBloc bloc;
+
   @override
   void initState() {
     bloc = BlocProvider.of<RecipeListBloc>(context);
@@ -35,6 +38,7 @@ class _RecipeList extends State<RecipeList> {
           title: Text(
             "Recipes",
             style: Theme.of(context).textTheme.headline1,
+
           ),
         ),
         body: BlocBuilder<RecipeListBloc, RecipeListState>(
@@ -45,23 +49,23 @@ class _RecipeList extends State<RecipeList> {
               return Container(
                   child: SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: GridView(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 13 / 16,
-                          ),
-                          physics: const BouncingScrollPhysics(
-                              parent: AlwaysScrollableScrollPhysics()),
-                          children: [
-                            ...?state.results.hits?.map((result) {
-                              return RecipeCard(
-                                result: result.recipe,
-                              );
-                            }).toList()
-                          ],
-                        ),
-                      )));
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: GridView(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 256,
+                  ),
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  children: [
+                    ...?state.results.hits?.map((result) {
+                      return RecipeCard(
+                        recipe: result.recipe,
+                      );
+                    }).toList()
+                  ],
+                ),
+              )));
             } else if (state is RecipeListError) {
               return const Center(
                 child: Text("Error happened"),
@@ -69,7 +73,7 @@ class _RecipeList extends State<RecipeList> {
             } else {
               return Center(
                 child: Container(
-                  child: Text("Noting happingng"),
+                  child: Text("Nothing happaned"),
                 ),
               );
             }
@@ -80,34 +84,21 @@ class _RecipeList extends State<RecipeList> {
   }
 }
 
-class RecipeCard extends StatefulWidget {
-  Recipe result;
+class RecipeCard extends StatelessWidget {
+  Recipe recipe;
+
   RecipeCard({
     Key? key,
-    required this.result,
+    required this.recipe,
   }) : super(key: key);
 
   @override
-  _RecipeCardState createState() => _RecipeCardState();
-
-}
-
-class _RecipeCardState extends State<RecipeCard> {
-  @override
   Widget build(BuildContext context) {
     return InkWell(
-      /*onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => RecipeInfoBloc(),
-              child: RecipeInfo(
-                id: widget.result.id,
-              ),
-            ),
-          ),
-        );
-      },*/
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => RecipeDetail(recipe: recipe)));
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Container(
@@ -145,7 +136,7 @@ class _RecipeCardState extends State<RecipeCard> {
                   ),
                   width: double.infinity,
                   child: CachedNetworkImage(
-                    imageUrl: widget.result.imageUrl ?? "",
+                    imageUrl: recipe.imageUrl!,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -154,27 +145,31 @@ class _RecipeCardState extends State<RecipeCard> {
                 height: 10,
               ),
               Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(2),
                 child: Text(
-                  widget.result.label ?? "",
+                  recipe.label!,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(2),
                 child: Text(
-                  "Calories: " + (widget.result.calories?.toStringAsFixed(2) ?? ""),
+                  "Calories: " + (recipe.calories!.toStringAsFixed(2)),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontWeight: FontWeight.normal),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(2),
                 child: Text(
-                  "Time to make: " + (widget.result.timeToMake?.toStringAsFixed(2) ?? ""),
+                  recipe.timeToMake!.round() != 0
+                      ? "Time to make: " +
+                          recipe.timeToMake!.round().toString() +
+                          " min"
+                      : "",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontWeight: FontWeight.normal),
