@@ -31,7 +31,7 @@ class SearchPage extends StatelessWidget {
                   decoration: InputDecoration(
                       hintText: "Search Recipes..",
                       suffixIcon: IconButton(
-                        icon: const Icon(Icons.search, color: Colors.redAccent),
+                        icon: const Icon(Icons.search, color: Colors.blueAccent),
                         onPressed: () {},
                       ),
                       contentPadding: const EdgeInsets.symmetric(
@@ -57,6 +57,7 @@ class SearchPage extends StatelessWidget {
                         builder: (context) => BlocProvider(
                           create: (context) => RecipeListBloc(),
                           child: RecipeList(
+                            isFavourites: false,
                             queryString: v
                           ),
                         ),

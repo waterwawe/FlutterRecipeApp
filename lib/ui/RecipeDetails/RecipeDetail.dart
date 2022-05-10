@@ -52,7 +52,7 @@ class RecipeDetail extends StatelessWidget {
                     children: [
                       Text(recipe.timeToMake!.round().toString() + " min",
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17)),
+                              fontWeight: FontWeight.bold, fontSize: 15)),
                       Text(
                         "to make",
                         style: TextStyle(
@@ -74,7 +74,7 @@ class RecipeDetail extends StatelessWidget {
                     children: [
                       Text(recipe.cuisineType?[0] ?? "",
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17)),
+                              fontWeight: FontWeight.bold, fontSize: 15)),
                       Text(
                         "cuisine type",
                         style: TextStyle(
@@ -94,7 +94,7 @@ class RecipeDetail extends StatelessWidget {
                     children: [
                       Text(recipe.calories!.toStringAsFixed(2),
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17)),
+                              fontWeight: FontWeight.bold, fontSize: 15)),
                       Text("calories",
                           style: TextStyle(
                               fontSize: 17, color: Colors.grey.shade600))
@@ -137,7 +137,7 @@ class RecipeDetail extends StatelessWidget {
                 padding: EdgeInsets.all(2.0),
                 child: Text(
                   "Ingredients:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
               if (recipe.ingredientLines!.isNotEmpty)
@@ -146,11 +146,11 @@ class RecipeDetail extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ...?recipe.ingredientLines?.map((line) {
-                      return Text(line, style: TextStyle(fontSize: 17));
+                      return Text(line, style: TextStyle(fontSize: 15));
                     }).toList()
                   ],
                 ),
-              if (recipe.cautions != null) const SizedBox(height: 20),
+              if (recipe.cautions != null) const SizedBox(height: 19),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                 child: Column(
@@ -161,7 +161,7 @@ class RecipeDetail extends StatelessWidget {
                       "Cautions:",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 16,
                       ),
                     ),
                     Column(
@@ -169,7 +169,7 @@ class RecipeDetail extends StatelessWidget {
                         ...?recipe.cautions?.map((line) {
                           return Text(line,
                               style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 15,
                               ));
                         }).toList()
                       ],

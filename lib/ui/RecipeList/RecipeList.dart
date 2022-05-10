@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_recipe/ui/RecipeDetails/RecipeDetail.dart';
@@ -6,10 +7,14 @@ import 'package:flutter_recipe/ui/RecipeList/recipe_list_bloc.dart';
 
 import '../../models/Recipe.dart';
 
+typedef ButtonCallback = void Function(Recipe);
+
 class RecipeList extends StatefulWidget {
   String queryString;
+  bool isFavourites;
 
-  RecipeList({Key? key, required this.queryString}) : super(key: key);
+  RecipeList({Key? key, required this.isFavourites, required this.queryString})
+      : super(key: key);
 
   @override
   State<RecipeList> createState() => _RecipeList();
@@ -21,8 +26,27 @@ class _RecipeList extends State<RecipeList> {
   @override
   void initState() {
     bloc = BlocProvider.of<RecipeListBloc>(context);
-    bloc.add(LoadRecipesResults(queryString: widget.queryString));
+    if (!widget.isFavourites) {
+      bloc.add(LoadRecipesResults(queryString: widget.queryString));
+    } else {
+      bloc.add(LoadFavouriteRecipes());
+    }
+
     super.initState();
+  }
+
+  refreshFavourites() {
+    bloc.add(LoadFavouriteRecipes());
+  }
+
+  addToFavourites(Recipe recipe) {
+    bloc = BlocProvider.of<RecipeListBloc>(context);
+    bloc.add(AddToFavourites(recipe: recipe));
+  }
+
+  removeFromFavourites(Recipe recipe) {
+    bloc = BlocProvider.of<RecipeListBloc>(context);
+    bloc.add(RemoveFromFavourites(recipe: recipe));
   }
 
   @override
@@ -32,15 +56,26 @@ class _RecipeList extends State<RecipeList> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.black),
-          backgroundColor: Colors.white,
-          title: Text(
-            "Recipes",
-            style: Theme.of(context).textTheme.headline1,
-
-          ),
-        ),
+            elevation: 0,
+            iconTheme: const IconThemeData(color: Colors.black),
+            backgroundColor: Colors.white,
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.isFavourites ? "Favourite Recipes" : "Recipes",
+                    style: Theme.of(context).textTheme.headline1,
+                  ),
+                  if (widget.isFavourites)
+                      ElevatedButton(
+                          onPressed: () {
+                            refreshFavourites();
+                          },
+                          child: Icon(CupertinoIcons.refresh))
+                  else
+                    Text("")
+                ])),
         body: BlocBuilder<RecipeListBloc, RecipeListState>(
           builder: (context, state) {
             if (state is RecipeListLoading) {
@@ -53,14 +88,20 @@ class _RecipeList extends State<RecipeList> {
                 child: GridView(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 256,
+                    mainAxisExtent: 300,
                   ),
                   physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics()),
                   children: [
-                    ...?state.results.hits?.map((result) {
+                    ...?state.results.hits!.map((result) {
                       return RecipeCard(
                         recipe: result.recipe,
+                        buttonText: widget.isFavourites
+                            ? "Remove favourite"
+                            : "Add favourite",
+                        buttonAction: widget.isFavourites
+                            ? removeFromFavourites
+                            : addToFavourites,
                       );
                     }).toList()
                   ],
@@ -86,18 +127,24 @@ class _RecipeList extends State<RecipeList> {
 
 class RecipeCard extends StatelessWidget {
   Recipe recipe;
+  ButtonCallback buttonAction;
+  String buttonText;
 
-  RecipeCard({
-    Key? key,
-    required this.recipe,
-  }) : super(key: key);
+  RecipeCard(
+      {Key? key,
+      required this.recipe,
+      required this.buttonAction,
+      required this.buttonText})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => RecipeDetail(recipe: recipe)));
+        if (buttonText == "Add favourite") {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => RecipeDetail(recipe: recipe)));
+        }
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
@@ -173,6 +220,19 @@ class RecipeCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontWeight: FontWeight.normal),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(2),
+                child: ElevatedButton(
+                  onPressed: () {
+                    buttonAction(recipe);
+                  },
+                  child: Text(
+                    buttonText,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.normal),
+                  ),
                 ),
               ),
             ],

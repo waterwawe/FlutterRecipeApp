@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Recipe {
   String? label;
   String? imageUrl;
@@ -16,10 +18,19 @@ class Recipe {
       this.ingredientLines,
       this.cautions});
 
-  factory Recipe.fromJson(json) {
-    String label = json["label"] as String;
-    String imageUrl = json["image"] as String;
+  Map<String, dynamic> toJson() {
+    return {
+      'label': label,
+      'image': imageUrl,
+      'calories': calories,
+      'totalTime': timeToMake,
+      'cautions': jsonEncode(cautions),
+      'ingredientLines': jsonEncode(ingredientLines),
+      'cuisineType': jsonEncode(cuisineType),
+    };
+  }
 
+  factory Recipe.fromJson(json) {
     var cuisineTypeArray = json['cuisineType']; // array is now List<dynamic>
     List<String> cuisineTypes = List<String>.from(cuisineTypeArray);
 
@@ -29,7 +40,6 @@ class Recipe {
     var cautionsArray = json['cautions']; // array is now List<dynamic>
     List<String> cautions = List<String>.from(cautionsArray);
 
-
     return Recipe(
         label: json["label"] as String,
         imageUrl: json["image"] as String,
@@ -38,5 +48,15 @@ class Recipe {
         cuisineType: cuisineTypes,
         ingredientLines: ingredientLines,
         cautions: cautions);
+  }
+
+  factory Recipe.fromFavourite(json) {
+
+    return Recipe(
+        label: json["label"] as String,
+        imageUrl: json["image"] as String,
+        calories: json["calories"] as double,
+        timeToMake: json["totalTime"] as double
+        );
   }
 }

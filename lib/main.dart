@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_recipe/models/Recipe.dart';
+import 'package:flutter_recipe/ui/Navigation/TabSwitcher.dart';
 import 'package:flutter_recipe/ui/Search/SearchPage.dart';
 import 'package:flutter_recipe/ui/Search/search_page_cubit.dart';
 
@@ -28,14 +29,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home:  BlocProvider(
-        create: (context) => SearchPageCubit(),
-        child: const SearchPage(),
-      ),
-      // home: BlocProvider(
-      //   create: (context) => RandomRecipeBloc(),
-      //   child: const RandomRecipe(),
-      // ),
-    );
+      home:  const TabSwitcher()
+      );
   }
 }

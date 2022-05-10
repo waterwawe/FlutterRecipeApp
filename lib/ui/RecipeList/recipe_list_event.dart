@@ -13,3 +13,26 @@ class LoadRecipesResults extends RecipeListEvent {
   @override
   List<Object> get props => [];
 }
+
+class LoadFavouriteRecipes extends RecipeListEvent {
+  LoadFavouriteRecipes();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AddToFavourites extends RecipeListEvent {
+  Recipe recipe;
+  AddToFavourites({required this.recipe});
+
+  @override
+  List<Object> get props => [];
+}
+
+class RemoveFromFavourites extends RecipeListEvent {
+  Recipe recipe;
+  RemoveFromFavourites({required this.recipe});
+
+  @override
+  List<Object> get props => [];
+}
