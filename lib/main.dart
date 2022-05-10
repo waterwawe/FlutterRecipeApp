@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_recipe/models/Recipe.dart';
 import 'package:flutter_recipe/ui/Navigation/TabSwitcher.dart';
-import 'package:flutter_recipe/ui/Search/SearchPage.dart';
-import 'package:flutter_recipe/ui/Search/search_page_cubit.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp
+  ]);
   runApp(const MyApp());
 }
 

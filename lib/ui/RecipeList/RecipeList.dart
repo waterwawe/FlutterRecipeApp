@@ -88,7 +88,7 @@ class _RecipeList extends State<RecipeList> {
                 child: GridView(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 300,
+                    mainAxisExtent: 330,
                   ),
                   physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics()),
