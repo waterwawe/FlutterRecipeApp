@@ -1,10 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_recipe/ui/RecipeList/recipe_list_bloc.dart';
-import 'package:flutter_recipe/ui/Search/search_page_cubit.dart';
-import 'package:flutter_recipe/ui/Search/search_page_state.dart';
 
 import '../RecipeList/RecipeList.dart';
 
@@ -13,8 +9,6 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SearchPageCubit, SearchPageState>(
-        builder: (context, state) {
       return MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
         child: Scaffold(
@@ -68,12 +62,8 @@ class SearchPage extends StatelessWidget {
               ),
             ),
           ),
-          body: SafeArea(
-              child: state.isLoading
-                      ? const Center(child: CircularProgressIndicator()) : Spacer()
-          ),
+          body: Container(),
         ),
       );
-    });
   }
 }

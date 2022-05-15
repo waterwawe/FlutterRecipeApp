@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_recipe/ui/Search/SearchPage.dart';
-import 'package:flutter_recipe/ui/Search/search_page_cubit.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import '../Favourites/FavouritesScreen.dart';
 
@@ -18,10 +17,7 @@ class _TabSwitcherState extends State<TabSwitcher> {
   late PersistentTabController _controller;
 
   final List<Widget> _widgetOptions = <Widget>[
-    BlocProvider(
-      create: (context) => SearchPageCubit(),
-      child: const SearchPage(),
-    ),
+    const SearchPage(),
     FavouritesScreen(),
   ];
 
